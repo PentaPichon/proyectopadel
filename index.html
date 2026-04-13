@@ -633,6 +633,36 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps){
           <canvas id="rc" role="img" aria-label="Habilidades de ${pname}"></canvas>
         </div>
       </div>
+ 
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-top:12px;">
+        <p class="sl" style="margin-bottom:.75rem">Descripción de habilidades</p>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="padding:.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Volea</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Dominio de la zona ofensiva: profundidad, dirección y capacidad de bloquear bolas rápidas para mantener la iniciativa del punto.</span>
+          </div>
+          <div style="padding:.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Remate</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Capacidad de finalización: potencia bruta para traerse la bola a campo propio, técnica para sacarla por tres o rematar liftado.</span>
+          </div>
+          <div style="padding:.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Defensa</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Habilidad desde el fondo: lectura de rebotes en cristal, chiquita y precisión en el globo para recuperar la red.</span>
+          </div>
+          <div style="padding:.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Bandeja</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Golpe de transición clave: eficacia con bolas altas a media pista sin perder posición ofensiva, aplicando efectos para que la bola no bote.</span>
+          </div>
+          <div style="padding:.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Físico</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Despliegue en pista: velocidad de reacción, desplazamientos laterales, agilidad para cubrir huecos y aguante en partidos largos.</span>
+          </div>
+          <div style="padding:.55rem 0;display:flex;gap:10px;align-items:baseline;">
+            <span style="font-size:12px;font-weight:600;color:var(--accent);min-width:72px;flex-shrink:0">Táctica</span>
+            <span style="font-size:12px;color:var(--muted);line-height:1.55">Inteligencia en pista: toma de decisiones, posicionamiento con el compañero, elección del golpe según el momento y gestión de la presión.</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
  
@@ -706,4 +736,4 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps){
 loadData();
 </script>
 </body>
-</html
+</html>
