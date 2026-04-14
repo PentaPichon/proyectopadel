@@ -190,7 +190,7 @@ td.r{text-align:right;}td.c{text-align:center;}
 </style>
 </head>
 <body>
-
+ 
 <header>
   <div>
     <div class="logo">Proyecto <span>Padel</span></div>
@@ -201,7 +201,7 @@ td.r{text-align:right;}td.c{text-align:center;}
     <button class="icon-btn" onclick="loadData()">&#8635; Actualizar</button>
   </div>
 </header>
-
+ 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('ranking',this)">Ranking</div>
   <div class="tab" onclick="switchTab('historial',this)">Historial</div>
@@ -210,21 +210,21 @@ td.r{text-align:right;}td.c{text-align:center;}
   <div class="tab" onclick="switchTab('hof',this)">Hall of Fame</div>
   <div class="tab" onclick="switchTab('liga',this)">Liga</div>
 </div>
-
+ 
 <main>
   <div id="root"><div class="loader">
     <span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span>
     <p style="margin-top:1.5rem;font-size:14px">Cargando datos...</p>
   </div></div>
 </main>
-
+ 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxY2m1hZU87fxcnKbrgFZFivsPb0hCwI4UuXqz7jQ7NL5Fxxz0kevVoo1PvdZ9mAlsl/exec';
 const MIN_P = 10;
 let chartInst=null,profChartInst=null,evoChartInst=null,radarInst=null,h2hRadarInst=null;
 let currentTab='ranking', selPlayer=null, h2hP1=null, h2hP2=null;
 let globalProfiles={}, globalRows=[], globalRanking=[], globalStats={}, globalFechas={}, globalRivals={}, globalPwins={}, globalPlosses={};
-
+ 
 // Theme
 function toggleTheme(){
   document.body.classList.toggle('light');
@@ -232,7 +232,7 @@ function toggleTheme(){
   localStorage.setItem('theme', document.body.classList.contains('light')?'light':'dark');
 }
 (function(){if(localStorage.getItem('theme')==='light'){document.body.classList.add('light');document.getElementById('themeBtn').textContent='\u263D';}})();
-
+ 
 function switchTab(tab,el){
   currentTab=tab;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -241,7 +241,7 @@ function switchTab(tab,el){
   document.getElementById('page-'+tab)?.classList.add('active');
   if(tab==='h2h') initH2H();
 }
-
+ 
 function initials(n){const w=n.trim().split(' ');return w.length>1?(w[0][0]+w[1][0]).toUpperCase():n.slice(0,2).toUpperCase();}
 function pColor(p){return p>=55?'#4ade80':p>=50?'#60a5fa':p>=45?'#fb923c':'#f87171';}
 function streakCell(st,count){
@@ -250,7 +250,7 @@ function streakCell(st,count){
   if(icon)return`<span class="streak-cell">${icon}<span class="streak-num" style="color:${col}">${count}</span></span>`;
   return`<span class="streak-cell"><span class="streak-num" style="color:${col}">${count}${st==='w'?'W':'L'}</span></span>`;
 }
-
+ 
 function avatarHTML(name,size,borderColor){
   const prof=globalProfiles[name]||{};
   const ini=initials(name);
@@ -259,7 +259,7 @@ function avatarHTML(name,size,borderColor){
   }
   return`<div class="podium-avatar" style="width:${size}px;height:${size}px;border:2px solid ${borderColor};background:${borderColor}22;color:${borderColor};font-family:\'Bebas Neue\',sans-serif;font-size:${Math.round(size*.3)}px">${ini}</div>`;
 }
-
+ 
 function inlineAvatar(name){
   const prof=globalProfiles[name]||{};
   const ini=initials(name);
@@ -268,7 +268,7 @@ function inlineAvatar(name){
   }
   return`<div class="rname-avatar" style="background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.2);color:rgba(245,200,66,.7);font-size:9px">${ini}</div>`;
 }
-
+ 
 // ── DATA ENGINE ──────────────────────────────────
 function computeStats(rows){
   const stats={},rivals={},pwins={},plosses={},fechas={};
@@ -296,7 +296,7 @@ function computeStats(rows){
   });
   return{stats,rivals,pwins,plosses,fechas,totalPartidos};
 }
-
+ 
 function buildRanking(stats,prevPosMap,minP=0){
   return Object.keys(stats).filter(p=>stats[p].w+stats[p].l>=minP).map(p=>{
     const s=stats[p],tot=s.w+s.l,pct=tot>0?(s.w/tot)*100:0;
@@ -315,7 +315,7 @@ function buildRanking(stats,prevPosMap,minP=0){
     return{...r,pos,chg};
   });
 }
-
+ 
 function computeTrend(rows,fechas,pname){
   const keys=Object.keys(fechas);
   if(keys.length<2)return'eq';
@@ -336,7 +336,7 @@ function computeTrend(rows,fechas,pname){
   if(pL<pP-0.05)return'dn';
   return'eq';
 }
-
+ 
 function computeMVPs(fechas){
   const mvps={};
   Object.entries(fechas).forEach(([fecha,matches])=>{
@@ -347,7 +347,7 @@ function computeMVPs(fechas){
   });
   return mvps;
 }
-
+ 
 function computeRankingEvolution(rows,allFechas){
   const evo={};const cumul=[];
   allFechas.forEach(f=>{
@@ -357,7 +357,7 @@ function computeRankingEvolution(rows,allFechas){
   });
   return evo;
 }
-
+ 
 function computePartnerStats(rows,pname){
   const ps={};
   rows.forEach(r=>{
@@ -377,7 +377,7 @@ function computePartnerStats(rows,pname){
   });
   return Object.entries(ps).map(([name,s])=>({name,w:s.w,l:s.l,tot:s.w+s.l,pct:s.w+s.l>0?(s.w/(s.w+s.l))*100:0})).sort((a,b)=>b.pct-a.pct);
 }
-
+ 
 function computeH2H(rows,p1,p2){
   let partnerW=0,partnerL=0,p1RivalWins=0,p2RivalWins=0;
   const matches=[];
@@ -407,7 +407,7 @@ function computeH2H(rows,p1,p2){
   });
   return{partnerW,partnerL,p1RivalWins,p2RivalWins,matches};
 }
-
+ 
 function computeHallOfFame(rows,ranking,fechas,mvps){
   const mvpCount={};
   Object.values(mvps).forEach(m=>{mvpCount[m.name]=(mvpCount[m.name]||0)+1;});
@@ -436,14 +436,14 @@ function computeHallOfFame(rows,ranking,fechas,mvps){
   Object.entries(globalPwins).forEach(([k,v])=>{if(v>bestComboW){bestComboW=v;bestCombo=k;}});
   return{topMVP,bestStreak,dominante,leader,mostPlayed,bestFechaPlayer,bestFechaPct,bestFechaName,bestCombo,bestComboW};
 }
-
+ 
 function computeLeague(stats){
   return Object.keys(stats).filter(p=>stats[p].w+stats[p].l>=MIN_P).map(p=>{
     const s=stats[p],tot=s.w+s.l,pct=tot>0?(s.w/tot)*100:0;
     return{name:p,pts:s.w*3,w:s.w,l:s.l,tot,pct};
   }).sort((a,b)=>b.pts-a.pts||b.pct-a.pct);
 }
-
+ 
 function matrixHTML(allP,valFn,isWin){
   const vals=allP.map(a=>allP.map(b=>valFn(a,b)));
   const flat=vals.flat().filter(v=>v!==null);
@@ -463,7 +463,7 @@ function matrixHTML(allP,valFn,isWin){
   });
   return h+'</tbody></table>';
 }
-
+ 
 // ── LOAD ─────────────────────────────────────────
 async function loadData(){
   [chartInst,profChartInst,evoChartInst,radarInst,h2hRadarInst].forEach(c=>{if(c)c.destroy();});
@@ -484,7 +484,7 @@ async function loadData(){
     document.getElementById('root').innerHTML=`<div class="err-box"><strong>No se pudo cargar</strong><br><br>${e.message}<br><br>Verificá el Apps Script y que la hoja se llame <code>Hoja1</code>.<br><br><button onclick="loadData()" style="background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);color:#fca5a5;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;margin-top:.5rem">Reintentar</button></div>`;
   }
 }
-
+ 
 // ── RENDER ALL ────────────────────────────────────
 function renderAll(rows){
   const{stats,rivals,pwins,plosses,fechas,totalPartidos}=computeStats(rows);
@@ -502,7 +502,7 @@ function renderAll(rows){
   const allP=ranking.map(r=>r.name);
   const mvps=computeMVPs(fechas);
   const evoData=computeRankingEvolution(rows,fechaKeys);
-
+ 
   document.getElementById('root').innerHTML=`
     <div id="page-ranking" class="page active"></div>
     <div id="page-historial" class="page"></div>
@@ -511,10 +511,10 @@ function renderAll(rows){
     <div id="page-hof" class="page"></div>
     <div id="page-liga" class="page"></div>
     <p class="updated" id="upd"></p>`;
-
+ 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+currentTab)?.classList.add('active');
-
+ 
   renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos,mvps,stats,fechas);
   renderHistorial(fechas,mvps);
   renderJugador(ranking);
@@ -522,7 +522,7 @@ function renderAll(rows){
   renderHallOfFame(rows,ranking,fechas,mvps,stats);
   renderLiga(stats);
   initWinChart(ranking);
-
+ 
   // Shared events
   document.querySelectorAll('.fecha-hdr').forEach(h=>{
     h.addEventListener('click',()=>{
@@ -551,7 +551,7 @@ function renderAll(rows){
       renderProfile(selPlayer,ranking,rivals,allP,fechaKeys,evoData,mvps,rows);
     });
   });
-
+ 
   // URL param player
   const urlP=new URLSearchParams(window.location.search).get('j');
   const startPlayer=urlP&&ranking.find(r=>r.name===urlP)?urlP:ranking[0]?.name;
@@ -568,7 +568,7 @@ function renderAll(rows){
   }
   document.getElementById('upd').textContent='Actualizado: '+new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
 }
-
+ 
 // ── RANKING PAGE ──────────────────────────────────
 function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos,mvps,stats,fechas){
   const top3=ranking.slice(0,3),order=[1,0,2];
@@ -580,7 +580,7 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
     const r=top3[idx];
     pod+=`<div class="podium-item">${avatarHTML(r.name,avSizes[idx],avColors[idx])}<span class="pname">${r.name}</span><span class="ppct">${r.pct.toFixed(1)}%</span><div class="podium-base ${bCl[idx]}"><span class="base-num">${idx+1}</span></div></div>`;
   });pod+='</div>';
-
+ 
   const bestS=ranking.length?ranking.reduce((a,b)=>b.streak>a.streak?b:a,ranking[0]):null;
   let bPair='',bPW=0,wPair='',wPL=0;
   Object.entries(pwins).forEach(([k,v])=>{const[p1,p2]=k.split('|');if((stats[p1]?.w+stats[p1]?.l||0)<MIN_P||(stats[p2]?.w+stats[p2]?.l||0)<MIN_P)return;if(v>bPW){bPW=v;bPair=k;}});
@@ -588,7 +588,7 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
   const dom=ranking.length?ranking.reduce((a,b)=>b.dgr>a.dgr?b:a,ranking[0]):null;
   const mvpCount={};Object.values(mvps).forEach(m=>{mvpCount[m.name]=(mvpCount[m.name]||0)+1;});
   const topMVP=Object.entries(mvpCount).sort((a,b)=>b[1]-a[1])[0];
-
+ 
   const sg=`<div class="stats-grid">
     <div class="stat-card"><p class="stat-label">Mejor pareja</p><p class="stat-val">${bPair.replace('|',' + ')||'&mdash;'}</p><p class="stat-sub"><span class="hl-g">${bPW} victorias</span> juntos</p></div>
     <div class="stat-card"><p class="stat-label">Peor pareja</p><p class="stat-val">${wPair.replace('|',' + ')||'&mdash;'}</p><p class="stat-sub"><span class="hl-r">${wPL} derrotas</span> juntos</p></div>
@@ -597,7 +597,7 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
     <div class="stat-card"><p class="stat-label">Mas dominante &#x1F4AA;</p><p class="stat-val">${dom?.name||'&mdash;'}</p><p class="stat-sub">DGR <span class="hl-g">${dom?.dgr>=0?'+':''}${dom?.dgr.toFixed(2)||0}</span></p></div>
     <div class="stat-card"><p class="stat-label">Rey de fechas &#x1F451;</p><p class="stat-val">${topMVP?topMVP[0]:'&mdash;'}</p><p class="stat-sub">MVP en <span class="hl-o">${topMVP?topMVP[1]:0} fecha${topMVP&&topMVP[1]>1?'s':''}</span></p></div>
   </div>`;
-
+ 
   let tbody='';
   ranking.forEach(r=>{
     const dots=r.last5.map(w=>`<span class="d ${w?'d-w':'d-l'}"></span>`).join('');
@@ -620,16 +620,16 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
       <td class="c">${chg}</td>
     </tr>`;
   });
-
+ 
   const tbl=`<span class="min-notice">Solo jugadores con ${MIN_P}+ partidos</span>
   <div class="search-wrap"><input class="search-input" type="text" placeholder="Buscar jugador..." oninput="filterRanking(this.value)"></div>
   <div class="rank-wrap"><table id="rankTable">
     <thead><tr><th>#</th><th>Jugador</th><th class="r">%</th><th class="c hide-m">Ultimos 5</th><th class="c">Racha</th><th class="c hide-m">Forma</th><th class="r hide-m">W/L</th><th class="c">Pos</th></tr></thead>
     <tbody>${tbody}</tbody></table></div>`;
-
+ 
   const wMat=matrixHTML(allP,(a,b)=>a===b?null:pwins[[a,b].sort().join('|')||0]||0,true);
   const rMat=matrixHTML(allP,(a,b)=>a===b?null:rivals[a+'>'+b]||0,false);
-
+ 
   document.getElementById('page-ranking').innerHTML=`<p class="sl">Podio</p>${pod}<p class="sl">Estadisticas</p>${sg}<p class="sl">Ranking</p>${tbl}
     <div class="chart-box"><p class="sl" style="margin-bottom:1rem">% victorias</p>
       <div style="position:relative;height:${Math.max(180,ranking.length*26)}px"><canvas id="wc" role="img" aria-label="% victorias"></canvas></div></div>
@@ -638,7 +638,7 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
     <p class="sl" style="margin-top:1.25rem">Derrotas contra rivales</p>
     <div class="matrix-box"><div class="matrix-scroll">${rMat}</div></div>`;
 }
-
+ 
 function filterRanking(q){
   const lq=q.toLowerCase();
   document.querySelectorAll('#rankTable tbody tr').forEach(tr=>{
@@ -646,7 +646,7 @@ function filterRanking(q){
     tr.style.display=name.toLowerCase().includes(lq)?'':' none';
   });
 }
-
+ 
 // ── HISTORIAL ─────────────────────────────────────
 function renderHistorial(fechas,mvps){
   const hKeys=Object.keys(fechas).reverse();
@@ -663,7 +663,7 @@ function renderHistorial(fechas,mvps){
   });
   document.getElementById('page-historial').innerHTML=html;
 }
-
+ 
 // ── JUGADOR ───────────────────────────────────────
 function renderJugador(ranking){
   const btns=ranking.map(r=>`<button class="pbtn" data-p="${r.name}">${r.name}</button>`).join('');
@@ -672,13 +672,13 @@ function renderJugador(ranking){
   </div>`;
   document.getElementById('page-jugador').innerHTML=`<div class="player-btns">${btns}</div><div id="prof"></div>${gloss}`;
 }
-
+ 
 function initWinChart(ranking){
   if(chartInst){chartInst.destroy();chartInst=null;}
   const canvas=document.getElementById('wc');if(!canvas)return;
   chartInst=new Chart(canvas,{type:'bar',data:{labels:ranking.map(r=>r.name),datasets:[{data:ranking.map(r=>parseFloat(r.pct.toFixed(1))),backgroundColor:ranking.map(r=>pColor(r.pct)),borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}%`}}},scales:{x:{min:0,max:90,ticks:{callback:v=>v+'%',color:'#555',font:{size:10}},grid:{color:'rgba(128,128,128,.08)'},border:{display:false}},y:{ticks:{color:'#ccc',font:{size:11,family:'DM Sans'}},grid:{display:false},border:{display:false}}}}});
 }
-
+ 
 // ── PROFILE ───────────────────────────────────────
 function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps,rows){
   [profChartInst,evoChartInst,radarInst].forEach(c=>{if(c)c.destroy();});
@@ -697,7 +697,7 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps,rows){
   const defensa=parseInt(prof.Defensa)||50,bandeja=parseInt(prof.Bandeja)||50;
   const fisico=parseInt(prof.Fisico||prof['Físico'])||50,tactica=parseInt(prof.Tactica||prof['Táctica'])||50;
   function tip(t){return`<span class="tooltip-wrap"><i class="info-btn">i</i><span class="tooltip-box">${t}</span></span>`;}
-
+ 
   // Partner stats
   const partnerStats=computePartnerStats(rows,pname);
   let partnerRows='';
@@ -713,11 +713,11 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps,rows){
       <td class="r" style="font-size:11px;color:var(--muted)">${ps.tot}</td>
     </tr>`;
   });
-
+ 
   const evo=evoData[pname]||[];
   const totalPlayers=Object.keys(evoData).length||1;
   const shareUrl=window.location.origin+window.location.pathname+'?j='+encodeURIComponent(pname);
-
+ 
   document.getElementById('prof').innerHTML=`
   <button class="share-btn" onclick="navigator.clipboard.writeText('${shareUrl}').then(()=>this.textContent='&#10003; Link copiado!').then(()=>setTimeout(()=>this.textContent='&#128279; Compartir perfil',2000))">&#128279; Compartir perfil</button>
   <div class="profile-layout">
@@ -749,7 +749,7 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps,rows){
       </div>
     </div>
   </div>
-
+ 
   <p class="sl">Estadísticas</p>
   <div class="profile-grid">
     <div class="profile-card"><p class="plabel">Efectividad</p><p class="pval" style="color:${pColor(r.pct)}">${r.pct.toFixed(1)}%</p><p class="psub">${r.w}W / ${r.l}L</p></div>
@@ -762,46 +762,59 @@ function renderProfile(pname,ranking,rivals,allP,fechaKeys,evoData,mvps,rows){
     ${wr?`<div class="profile-card"><p class="plabel">Mejor rival</p><p class="pval" style="font-size:15px">${wr}</p><p class="psub">${wc} victorias</p></div>`:''}
     ${lr?`<div class="profile-card"><p class="plabel">Peor rival</p><p class="pval" style="font-size:15px">${lr}</p><p class="psub">${lc} derrotas</p></div>`:''}
   </div>
-
+ 
   ${partnerStats.length?`<p class="sl">Rendimiento por compañero</p>
   <div class="partner-table-wrap"><table class="partner-table">
     <thead><tr><th>Compañero</th><th>% victorias</th><th class="r">W/L</th><th class="r">Partidos</th></tr></thead>
     <tbody>${partnerRows}</tbody>
   </table></div>`:''}
-
+ 
   <div class="chart-box"><p class="sl" style="margin-bottom:.85rem">Últimos ${r.res.slice(-10).length} resultados</p>
     <div style="position:relative;height:90px"><canvas id="pc" role="img" aria-label="Resultados recientes"></canvas></div></div>
   ${evo.length>=2?`<div class="chart-box"><p class="sl" style="margin-bottom:.85rem">Evolución del ranking</p>
     <div style="position:relative;height:150px"><canvas id="ec" role="img" aria-label="Evolucion del ranking"></canvas></div></div>`:''}`;
-
+ 
   radarInst=new Chart(document.getElementById('rc'),{type:'radar',data:{labels:['Volea','Remate','Defensa','Bandeja','Físico','Táctica'],datasets:[{data:[volea,remate,defensa,bandeja,fisico,tactica],backgroundColor:'rgba(245,200,66,.12)',borderColor:'#f5c842',pointBackgroundColor:'#f5c842',pointRadius:4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(128,128,128,.12)'},angleLines:{color:'rgba(128,128,128,.12)'},pointLabels:{color:'#aaa',font:{size:11,family:'DM Sans'}}}}}});
-
+ 
   const chData=r.res.slice(-10),chLabels=chData.map((_,i)=>`P${r.res.length-chData.length+i+1}`);
   profChartInst=new Chart(document.getElementById('pc'),{type:'bar',data:{labels:chLabels,datasets:[{data:chData.map(v=>v===1?1:-1),backgroundColor:chData.map(v=>v===1?'rgba(74,222,128,.7)':'rgba(248,113,113,.7)'),borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw===1?' Victoria':' Derrota'}}},scales:{y:{min:-1.5,max:1.5,ticks:{display:false},grid:{color:'rgba(128,128,128,.06)'},border:{display:false}},x:{ticks:{color:'#555',font:{size:9}},grid:{display:false},border:{display:false}}}}});
-
+ 
   if(evo.length>=2&&document.getElementById('ec')){
     evoChartInst=new Chart(document.getElementById('ec'),{type:'line',data:{labels:fechaKeys.slice(0,evo.length),datasets:[{data:evo,borderColor:'#f5c842',backgroundColor:'rgba(245,200,66,.08)',pointBackgroundColor:'#f5c842',pointRadius:4,tension:.3,fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' Posición #'+c.raw}}},scales:{y:{reverse:true,min:1,max:totalPlayers,ticks:{stepSize:1,color:'#555',font:{size:10},callback:v=>'#'+v},grid:{color:'rgba(128,128,128,.06)'},border:{display:false}},x:{ticks:{color:'#555',font:{size:10}},grid:{display:false},border:{display:false}}}}});
   }
 }
-
+ 
 // ── H2H ──────────────────────────────────────────
 function renderH2HPage(ranking){
-  const opts=ranking.map(r=>`<option value="${r.name}">${r.name}</option>`).join('');
+  const allNames=ranking.map(r=>r.name);
+  function buildOpts(names,selected){return names.map(n=>`<option value="${n}"${n===selected?' selected':''} >${n}</option>`).join('');}
+  function refreshSelects(){
+    const v1=document.getElementById('h2hSel1').value;
+    const v2=document.getElementById('h2hSel2').value;
+    document.getElementById('h2hSel2').innerHTML=buildOpts(allNames.filter(n=>n!==v1),v2===v1?allNames.find(n=>n!==v1):v2);
+    document.getElementById('h2hSel1').innerHTML=buildOpts(allNames.filter(n=>n!==document.getElementById('h2hSel2').value),v1);
+  }
   document.getElementById('page-h2h').innerHTML=`
     <p class="sl">Head to Head</p>
     <div class="h2h-selectors">
-      <select class="h2h-select" id="h2hSel1" onchange="initH2H()">${opts}</select>
+      <select class="h2h-select" id="h2hSel1" onchange="refreshH2HSelects();initH2H()">${buildOpts(allNames.filter(n=>n!==ranking[1]?.name),ranking[0]?.name)}</select>
       <span class="h2h-vs">VS</span>
-      <select class="h2h-select" id="h2hSel2" onchange="initH2H()">${ranking.length>1?opts.replace('<option value="'+ranking[0].name+'">','<option value="'+ranking[0].name+'" disabled>'):opts}</select>
+      <select class="h2h-select" id="h2hSel2" onchange="refreshH2HSelects();initH2H()">${buildOpts(allNames.filter(n=>n!==ranking[0]?.name),ranking[1]?.name)}</select>
     </div>
     <div id="h2hContent"></div>`;
-  if(ranking.length>=2){
-    document.getElementById('h2hSel1').value=ranking[0].name;
-    document.getElementById('h2hSel2').value=ranking[1].name;
-    initH2H();
-  }
+  window._h2hNames=allNames;
+  if(ranking.length>=2) initH2H();
 }
-
+function refreshH2HSelects(){
+  const names=window._h2hNames||[];
+  const v1=document.getElementById('h2hSel1')?.value;
+  const v2=document.getElementById('h2hSel2')?.value;
+  const sel2=document.getElementById('h2hSel2');
+  const sel1=document.getElementById('h2hSel1');
+  if(sel2) sel2.innerHTML=names.filter(n=>n!==v1).map(n=>`<option value="${n}"${n===v2&&v2!==v1?' selected':''} >${n}</option>`).join('');
+  if(sel1) sel1.innerHTML=names.filter(n=>n!==sel2?.value).map(n=>`<option value="${n}"${n===v1?' selected':''} >${n}</option>`).join('');
+}
+ 
 function initH2H(){
   if(h2hRadarInst){h2hRadarInst.destroy();h2hRadarInst=null;}
   const sel1=document.getElementById('h2hSel1'),sel2=document.getElementById('h2hSel2');
@@ -817,12 +830,12 @@ function initH2H(){
   const b1=parseInt(prof1.Bandeja)||50,b2=parseInt(prof2.Bandeja)||50;
   const f1=parseInt(prof1.Fisico||prof1['Físico'])||50,f2=parseInt(prof2.Fisico||prof2['Físico'])||50;
   const t1=parseInt(prof1.Tactica||prof1['Táctica'])||50,t2=parseInt(prof2.Tactica||prof2['Táctica'])||50;
-
+ 
   const p1PctW=h2h.partnerW+h2h.partnerL>0?Math.round(h2h.partnerW/(h2h.partnerW+h2h.partnerL)*100):0;
   const p1RivW=h2h.p1RivalWins+h2h.p2RivalWins>0?Math.round(h2h.p1RivalWins/(h2h.p1RivalWins+h2h.p2RivalWins)*100):0;
-
+ 
   const rivalWinner=h2h.p1RivalWins>h2h.p2RivalWins?p1:h2h.p2RivalWins>h2h.p1RivalWins?p2:null;
-
+ 
   let matchesHtml='';
   h2h.matches.slice(-10).reverse().forEach(m=>{
     const wA=m.g==='Pareja A';
@@ -832,47 +845,47 @@ function initH2H(){
       <div class="${!wA?'mt-w':'mt-l'}"><div class="tnames tnames-r">${m.j1b} / ${m.j2b}</div></div>
     </div>`;
   });
-
+ 
   document.getElementById('h2hContent').innerHTML=`
-  <div class="h2h-stats-grid">
-    <div class="h2h-col">
-      <div style="text-align:center;margin-bottom:8px">${avatarHTML(p1,52,'var(--accent)')}
-        <p style="font-weight:600;margin-top:6px">${p1}</p>
-        <p style="font-size:12px;color:var(--muted)">#${r1?.pos||'?'} &mdash; ${r1?.pct.toFixed(1)||0}%</p>
-      </div>
-      <div class="h2h-card${h2h.partnerW>=h2h.partnerL?' h2h-winner':''}">
-        <p class="h2h-card-label">Como compañeros</p>
-        <p class="h2h-card-val">${h2h.partnerW}W / ${h2h.partnerL}L</p>
-        <p class="h2h-card-sub">${p1PctW}% victorias</p>
-      </div>
-      <div class="h2h-card${rivalWinner===p1?' h2h-winner':''}">
-        <p class="h2h-card-label">Como rivales</p>
-        <p class="h2h-card-val">${h2h.p1RivalWins}W</p>
-        <p class="h2h-card-sub">${p1RivW}% cuando se enfrentan</p>
-      </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+    <div style="text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;">
+      ${avatarHTML(p1,52,'var(--accent)')}
+      <p style="font-weight:600;margin-top:6px">${p1}</p>
+      <p style="font-size:12px;color:var(--muted)">#${r1?.pos||'?'} &mdash; ${r1?.pct.toFixed(1)||0}% global</p>
     </div>
-    <div class="h2h-center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);letter-spacing:.1em">VS</div>
-      <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">${h2h.matches.length} partidos<br>juntos o enfrentados</div>
-    </div>
-    <div class="h2h-col">
-      <div style="text-align:center;margin-bottom:8px">${avatarHTML(p2,52,'var(--silver)')}
-        <p style="font-weight:600;margin-top:6px">${p2}</p>
-        <p style="font-size:12px;color:var(--muted)">#${r2?.pos||'?'} &mdash; ${r2?.pct.toFixed(1)||0}%</p>
-      </div>
-      <div class="h2h-card${h2h.partnerL>h2h.partnerW?' h2h-winner':''}">
-        <p class="h2h-card-label">Como compañeros</p>
-        <p class="h2h-card-val">${h2h.partnerW}W / ${h2h.partnerL}L</p>
-        <p class="h2h-card-sub">${100-p1PctW}% victorias</p>
-      </div>
-      <div class="h2h-card${rivalWinner===p2?' h2h-winner':''}">
-        <p class="h2h-card-label">Como rivales</p>
-        <p class="h2h-card-val">${h2h.p2RivalWins}W</p>
-        <p class="h2h-card-sub">${100-p1RivW}% cuando se enfrentan</p>
-      </div>
+    <div style="text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;">
+      ${avatarHTML(p2,52,'var(--silver)')}
+      <p style="font-weight:600;margin-top:6px">${p2}</p>
+      <p style="font-size:12px;color:var(--muted)">#${r2?.pos||'?'} &mdash; ${r2?.pct.toFixed(1)||0}% global</p>
     </div>
   </div>
-
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+    <div class="h2h-card">
+      <p class="h2h-card-label">Juntos</p>
+      <p class="h2h-card-val">${h2h.partnerW}W / ${h2h.partnerL}L</p>
+      <p class="h2h-card-sub">${p1PctW}% ganados como dupla</p>
+    </div>
+    <div class="h2h-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+      <p style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Enfrentados</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+        <div style="text-align:center">
+          <p style="font-size:18px;font-weight:600;color:${rivalWinner===p1?'var(--green)':'var(--text)'}">${h2h.p1RivalWins}</p>
+          <p style="font-size:10px;color:var(--muted)">${p1}</p>
+        </div>
+        <span style="color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1rem">VS</span>
+        <div style="text-align:center">
+          <p style="font-size:18px;font-weight:600;color:${rivalWinner===p2?'var(--green)':'var(--text)'}">${h2h.p2RivalWins}</p>
+          <p style="font-size:10px;color:var(--muted)">${p2}</p>
+        </div>
+      </div>
+    </div>
+    <div class="h2h-card">
+      <p class="h2h-card-label">Total partidos</p>
+      <p class="h2h-card-val">${h2h.matches.length}</p>
+      <p class="h2h-card-sub">juntos o enfrentados</p>
+    </div>
+  </div>
+ 
   <div class="chart-box" style="margin-top:14px">
     <p class="sl" style="margin-bottom:.85rem">Comparación de habilidades</p>
     <div style="position:relative;height:280px"><canvas id="h2hRadar" role="img" aria-label="Comparacion de habilidades"></canvas></div>
@@ -881,13 +894,13 @@ function initH2H(){
       <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:2px;background:#60a5fa;display:inline-block"></span>${p2}</span>
     </div>
   </div>
-
+ 
   ${h2h.matches.length?`<p class="sl">Historial reciente</p>
   <div class="rank-wrap" style="margin-bottom:1.25rem">${matchesHtml}</div>`:''}`;
-
+ 
   h2hRadarInst=new Chart(document.getElementById('h2hRadar'),{type:'radar',data:{labels:['Volea','Remate','Defensa','Bandeja','Físico','Táctica'],datasets:[{label:p1,data:[v1,re1,d1,b1,f1,t1],backgroundColor:'rgba(245,200,66,.1)',borderColor:'#f5c842',pointBackgroundColor:'#f5c842',pointRadius:3,borderWidth:2},{label:p2,data:[v2,re2,d2,b2,f2,t2],backgroundColor:'rgba(96,165,250,.1)',borderColor:'#60a5fa',pointBackgroundColor:'#60a5fa',pointRadius:3,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(128,128,128,.12)'},angleLines:{color:'rgba(128,128,128,.12)'},pointLabels:{color:'#aaa',font:{size:11,family:'DM Sans'}}}}}});
 }
-
+ 
 // ── HALL OF FAME ──────────────────────────────────
 function renderHallOfFame(rows,ranking,fechas,mvps,stats){
   if(!ranking.length){document.getElementById('page-hof').innerHTML='<p style="color:var(--muted);font-size:14px;padding:2rem">Sin datos suficientes.</p>';return;}
@@ -906,7 +919,7 @@ function renderHallOfFame(rows,ranking,fechas,mvps,stats){
   <div class="hof-grid">${cards.map(c=>`<div class="hof-card"><div class="hof-icon">${c.icon}</div><p class="hof-label">${c.label}</p><p class="hof-val">${c.val}</p><p class="hof-sub">${c.sub}</p></div>`).join('')}</div>`;
   document.getElementById('page-hof').innerHTML=html;
 }
-
+ 
 // ── LIGA ─────────────────────────────────────────
 function renderLiga(stats){
   const liga=computeLeague(stats);
@@ -929,7 +942,7 @@ function renderLiga(stats){
     <tbody>${tbody}</tbody>
   </table></div>`;
 }
-
+ 
 loadData();
 </script>
 </body>
