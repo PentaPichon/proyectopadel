@@ -179,8 +179,9 @@ td.r{text-align:right;}td.c{text-align:center;}
 .updated{font-size:11px;color:var(--muted);text-align:right;margin-top:.5rem;padding-bottom:.5rem;}
 @media(max-width:640px){
   .profile-layout{grid-template-columns:1fr;}
-  .photo-card{flex-direction:row;align-items:flex-start;gap:12px;}
-  .player-desc-lg,.player-fullname-lg{text-align:left;}
+  .photo-card{flex-direction:column;align-items:center;gap:10px;}
+  .player-desc-lg{text-align:center;font-size:13px;line-height:1.6;max-width:100%;}
+  .player-fullname-lg{text-align:center;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .logo{font-size:2rem;}main{padding:1.1rem 1rem;}
   .tab{padding:9px 11px;font-size:12px;}
@@ -946,4 +947,4 @@ function renderLiga(stats){
 loadData();
 </script>
 </body>
-</html>
+</html
