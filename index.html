@@ -494,21 +494,22 @@ function renderAll(rows){
   const _fs=new Set();
   rows.forEach(r=>{const f=String(r['Fecha']||'').trim();if(f&&!_fs.has(f)){_fs.add(f);fechaOrder.push(f);}});
   const fechaKeys=fechaOrder.filter(f=>fechas[f]);
-  let prevPosMap=null;
-  if(fechaKeys.length>=2){
-    const last=fechaKeys[fechaKeys.length-1];
-    const prevRows=rows.filter(r=>String(r['Fecha']||'').trim()!==last);
-    if(prevRows.length){
-      const{stats:ps}=computeStats(prevRows);
-      const pr=buildRanking(ps,null,MIN_P);
-      prevPosMap={};pr.forEach(r=>prevPosMap[r.name]=r.pos);
-    }
-  }
-  const ranking=buildRanking(stats,prevPosMap,MIN_P);
+  const ranking=buildRanking(stats,null,MIN_P);
   globalRanking=ranking;
   const allP=ranking.map(r=>r.name);
   const mvps=computeMVPs(fechas);
   const evoData=computeRankingEvolution(rows,fechaKeys);
+ 
+  // Derive prevPosMap from evoData (position of each player at penultimate fecha)
+  if(fechaKeys.length>=2){
+    const prevFechaIdx=fechaKeys.length-2;
+    globalRanking=globalRanking.map(r=>{
+      const positions=evoData[r.name]||[];
+      const prevPos=positions[prevFechaIdx];
+      const chg=prevPos!==undefined?prevPos-r.pos:null;
+      return{...r,chg};
+    });
+  }
  
   document.getElementById('root').innerHTML=`
     <div id="page-ranking" class="page active"></div>
@@ -949,4 +950,4 @@ function renderLiga(stats){
 loadData();
 </script>
 </body>
-</html>
+</html
