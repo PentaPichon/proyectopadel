@@ -65,7 +65,7 @@ td.r{text-align:right;}td.c{text-align:center;}
 .rname-avatar{width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:10px;}
 .rname-avatar img{width:100%;height:100%;object-fit:cover;}
 .rname{font-weight:600;font-size:14px;cursor:pointer;}.rname:hover{color:var(--accent);}
-.dots{display:flex;gap:3px;align-items:center;}
+.dots{display:flex;gap:3px;align-items:center;justify-content:center;}
 .d{width:7px;height:7px;border-radius:50%;}.d-w{background:var(--green);}.d-l{background:rgba(128,128,128,.25);}
 .streak-cell{display:inline-flex;align-items:center;gap:4px;font-size:13px;}
 .streak-num{font-size:11px;}
@@ -490,17 +490,14 @@ async function loadData(){
 function renderAll(rows){
   const{stats,rivals,pwins,plosses,fechas,totalPartidos}=computeStats(rows);
   globalStats=stats;globalFechas=fechas;globalRivals=rivals;globalPwins=pwins;globalPlosses=plosses;
-  const fechaKeys=Object.keys(fechas);
-  // Sort fechas so "Fecha 10" comes after "Fecha 9", not between "Fecha 1" and "Fecha 2"
-  fechaKeys.sort((a,b)=>{
-    const na=parseInt(a.replace(/\D/g,''))||0;
-    const nb=parseInt(b.replace(/\D/g,''))||0;
-    return na!==nb ? na-nb : a.localeCompare(b);
-  });
+  const fechaOrder=[];
+  const _fs=new Set();
+  rows.forEach(r=>{const f=String(r['Fecha']||'').trim();if(f&&!_fs.has(f)){_fs.add(f);fechaOrder.push(f);}});
+  const fechaKeys=fechaOrder.filter(f=>fechas[f]);
   let prevPosMap=null;
   if(fechaKeys.length>=2){
     const last=fechaKeys[fechaKeys.length-1];
-    const prevRows=rows.filter(r=>String(r['Fecha']||''). trim()!==last);
+    const prevRows=rows.filter(r=>String(r['Fecha']||'').trim()!==last);
     if(prevRows.length){
       const{stats:ps}=computeStats(prevRows);
       const pr=buildRanking(ps,null,MIN_P);
@@ -952,4 +949,4 @@ function renderLiga(stats){
 loadData();
 </script>
 </body>
-</html
+</html>
