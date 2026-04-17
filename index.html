@@ -491,12 +491,21 @@ function renderAll(rows){
   const{stats,rivals,pwins,plosses,fechas,totalPartidos}=computeStats(rows);
   globalStats=stats;globalFechas=fechas;globalRivals=rivals;globalPwins=pwins;globalPlosses=plosses;
   const fechaKeys=Object.keys(fechas);
+  // Sort fechas so "Fecha 10" comes after "Fecha 9", not between "Fecha 1" and "Fecha 2"
+  fechaKeys.sort((a,b)=>{
+    const na=parseInt(a.replace(/\D/g,''))||0;
+    const nb=parseInt(b.replace(/\D/g,''))||0;
+    return na!==nb ? na-nb : a.localeCompare(b);
+  });
   let prevPosMap=null;
   if(fechaKeys.length>=2){
     const last=fechaKeys[fechaKeys.length-1];
-    const{stats:ps}=computeStats(rows.filter(r=>String(r['Fecha']||''). trim()!==last));
-    const pr=buildRanking(ps,null,MIN_P);
-    prevPosMap={};pr.forEach(r=>prevPosMap[r.name]=r.pos);
+    const prevRows=rows.filter(r=>String(r['Fecha']||''). trim()!==last);
+    if(prevRows.length){
+      const{stats:ps}=computeStats(prevRows);
+      const pr=buildRanking(ps,null,MIN_P);
+      prevPosMap={};pr.forEach(r=>prevPosMap[r.name]=r.pos);
+    }
   }
   const ranking=buildRanking(stats,prevPosMap,MIN_P);
   globalRanking=ranking;
@@ -606,17 +615,13 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
     let chg=`<span class="chg-eq">&mdash;</span>`;
     if(r.chg>0)chg=`<span class="chg-up">+${r.chg}&#9650;</span>`;
     else if(r.chg<0)chg=`<span class="chg-dn">${r.chg}&#9660;</span>`;
-    const trend=computeTrend(globalRows,fechas,r.name);
-    let trendHtml=`<span class="trend-eq">&mdash;</span>`;
-    if(trend==='up')trendHtml=`<span class="trend-up">&#9650; Forma</span>`;
-    else if(trend==='dn')trendHtml=`<span class="trend-dn">&#9660; Baja</span>`;
+ 
     tbody+=`<tr data-name="${r.name}">
       <td class="rnum">${r.pos}</td>
       <td><div class="rname-cell">${inlineAvatar(r.name)}<span class="rname" data-p="${r.name}">${r.name}</span></div></td>
       <td class="r"><span style="color:${pColor(r.pct)};font-weight:600;font-size:13px">${r.pct.toFixed(1)}%</span></td>
       <td class="c hide-m"><div class="dots">${dots}</div></td>
       <td class="c">${sc}</td>
-      <td class="c hide-m">${trendHtml}</td>
       <td class="r hide-m" style="font-size:11px;color:var(--muted)">${r.w}W/${r.l}L</td>
       <td class="c">${chg}</td>
     </tr>`;
@@ -625,7 +630,7 @@ function renderRanking(ranking,allP,pwins,plosses,rivals,fechaKeys,totalPartidos
   const tbl=`<span class="min-notice">Solo jugadores con ${MIN_P}+ partidos</span>
   <div class="search-wrap"><input class="search-input" type="text" placeholder="Buscar jugador..." oninput="filterRanking(this.value)"></div>
   <div class="rank-wrap"><table id="rankTable">
-    <thead><tr><th>#</th><th>Jugador</th><th class="r">%</th><th class="c hide-m">Ultimos 5</th><th class="c">Racha</th><th class="c hide-m">Forma</th><th class="r hide-m">W/L</th><th class="c">Pos</th></tr></thead>
+    <thead><tr><th>#</th><th>Jugador</th><th class="r">%</th><th class="c hide-m">Ultimos 5</th><th class="c">Racha</th><th class="r hide-m">W/L</th><th class="c">Pos</th></tr></thead>
     <tbody>${tbody}</tbody></table></div>`;
  
   const wMat=matrixHTML(allP,(a,b)=>a===b?null:pwins[[a,b].sort().join('|')||0]||0,true);
